@@ -227,7 +227,8 @@ else () # MSVC
   set(i686_SOURCES ${i386_SOURCES})
 endif () # if (NOT MSVC)
 
-set(arm_SOURCES
+# These are sources that should be appropriate for any ARM platform.
+set(arm_GENERIC_SOURCES
   arm/aeabi_cdcmp.S
   arm/aeabi_cdcmpeq_check_nan.c
   arm/aeabi_cfcmp.S
@@ -253,32 +254,10 @@ set(arm_SOURCES
   arm/divmodsi4.S
   arm/divsi3.S
   arm/modsi3.S
-  arm/negdf2vfp.S
-  arm/negsf2vfp.S
   arm/switch16.S
   arm/switch32.S
   arm/switch8.S
   arm/switchu8.S
-  arm/sync_fetch_and_add_4.S
-  arm/sync_fetch_and_add_8.S
-  arm/sync_fetch_and_and_4.S
-  arm/sync_fetch_and_and_8.S
-  arm/sync_fetch_and_max_4.S
-  arm/sync_fetch_and_max_8.S
-  arm/sync_fetch_and_min_4.S
-  arm/sync_fetch_and_min_8.S
-  arm/sync_fetch_and_nand_4.S
-  arm/sync_fetch_and_nand_8.S
-  arm/sync_fetch_and_or_4.S
-  arm/sync_fetch_and_or_8.S
-  arm/sync_fetch_and_sub_4.S
-  arm/sync_fetch_and_sub_8.S
-  arm/sync_fetch_and_umax_4.S
-  arm/sync_fetch_and_umax_8.S
-  arm/sync_fetch_and_umin_4.S
-  arm/sync_fetch_and_umin_8.S
-  arm/sync_fetch_and_xor_4.S
-  arm/sync_fetch_and_xor_8.S
   arm/sync_synchronize.S
   arm/udivmodsi4.S
   arm/udivsi3.S
@@ -304,7 +283,32 @@ set(aarch64_SOURCES
   trunctfsf2.c
   ${GENERIC_SOURCES})
 
-set(armhf_SOURCES
+# These are sources for the ARM platform that require Thumb2 instructions
+# support.
+set(arm_THUMB_SOURCES
+  arm/sync_fetch_and_add_4.S
+  arm/sync_fetch_and_add_8.S
+  arm/sync_fetch_and_and_4.S
+  arm/sync_fetch_and_and_8.S
+  arm/sync_fetch_and_max_4.S
+  arm/sync_fetch_and_max_8.S
+  arm/sync_fetch_and_min_4.S
+  arm/sync_fetch_and_min_8.S
+  arm/sync_fetch_and_nand_4.S
+  arm/sync_fetch_and_nand_8.S
+  arm/sync_fetch_and_or_4.S
+  arm/sync_fetch_and_or_8.S
+  arm/sync_fetch_and_sub_4.S
+  arm/sync_fetch_and_sub_8.S
+  arm/sync_fetch_and_umax_4.S
+  arm/sync_fetch_and_umax_8.S
+  arm/sync_fetch_and_umin_4.S
+  arm/sync_fetch_and_umin_8.S
+  arm/sync_fetch_and_xor_4.S
+  arm/sync_fetch_and_xor_8.S)
+
+# These are sources for the ARM platform that require VFP instructions support.
+set(arm_VFP_SOURCES
   arm/adddf3vfp.S
   arm/addsf3vfp.S
   arm/divdf3vfp.S
@@ -330,6 +334,8 @@ set(armhf_SOURCES
   arm/ltsf2vfp.S
   arm/muldf3vfp.S
   arm/mulsf3vfp.S
+  arm/negdf2vfp.S
+  arm/negsf2vfp.S
   arm/nedf2vfp.S
   arm/nesf2vfp.S
   arm/restore_vfp_d8_d15_regs.S
@@ -338,16 +344,18 @@ set(armhf_SOURCES
   arm/subsf3vfp.S
   arm/truncdfsf2vfp.S
   arm/unorddf2vfp.S
-  arm/unordsf2vfp.S
-  ${arm_SOURCES})
-set(armv7_SOURCES ${arm_SOURCES})
-set(armv7s_SOURCES ${arm_SOURCES})
+  arm/unordsf2vfp.S)
+
+set(arm_SOURCES ${arm_GENERIC_SOURCES})
+set(armhf_SOURCES ${arm_GENERIC_SOURCES} ${arm_VFP_SOURCES})
+set(armv7_SOURCES ${arm_GENERIC_SOURCES} ${arm_VFP_SOURCES} ${arm_THUMB_SOURCES})
+set(armv7s_SOURCES ${arm_GENERIC_SOURCES} ${arm_VFP_SOURCES} ${arm_THUMB_SOURCES})
 set(arm64_SOURCES ${aarch64_SOURCES})
 
 # macho_embedded archs
 set(armv6m_SOURCES ${GENERIC_SOURCES})
-set(armv7m_SOURCES ${arm_SOURCES})
-set(armv7em_SOURCES ${arm_SOURCES})
+set(armv7m_SOURCES ${arm_GENERIC_SOURCES} ${arm_THUMB_SOURCES})
+set(armv7em_SOURCES ${arm_GENERIC_SOURCES} ${arm_THUMB_SOURCES})
 
 set(mips_SOURCES ${GENERIC_SOURCES})
 set(mipsel_SOURCES ${mips_SOURCES})
