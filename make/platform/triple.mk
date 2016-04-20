@@ -81,12 +81,13 @@ FUNCTIONS.builtins := $(CommonEnabledFunctions) $(ArchEnabledFunctions)
 ifneq ($(findstring linux,$(TargetTriple)),)
 ifeq ($(call contains,i386 x86_64,$(Arch)),true)
 
-FUNCTIONS.profile-i386 := GCDAProfiling InstrProfiling InstrProfilingBuffer \
+FUNCTIONS.profile := GCDAProfiling InstrProfiling InstrProfilingBuffer \
                           InstrProfilingFile InstrProfilingPlatformOther \
                           InstrProfilingRuntime InstrProfilingUtil \
                           InstrProfilingWriter InstrProfilingValue \
                           InstrProfilingMerge InstrProfilingMergeFile
-FUNCTIONS.profile-x86_64 := $(FUNCTIONS.profile-i386)
+
+FUNCTIONS.builtins += FUNCTIONS.profile
 
 endif
 endif
