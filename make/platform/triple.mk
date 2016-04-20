@@ -76,3 +76,17 @@ ArchEnabledFunctions := $(filter-out $(ArchDisabledFunctions),$(value ArchFuncti
 CommonEnabledFunctions := $(filter-out $(CommonDisabledFunctions),$(CommonFunctions_gcc))
 
 FUNCTIONS.builtins := $(CommonEnabledFunctions) $(ArchEnabledFunctions)
+
+
+ifneq ($(findstring linux,$(TargetTriple)),)
+ifeq ($(call contains,i386 x86_64,$(Arch)),true)
+
+FUNCTIONS.profile-i386 := GCDAProfiling InstrProfiling InstrProfilingBuffer \
+                          InstrProfilingFile InstrProfilingPlatformOther \
+                          InstrProfilingRuntime InstrProfilingUtil \
+                          InstrProfilingWriter InstrProfilingValue \
+                          InstrProfilingMerge InstrProfilingMergeFile
+FUNCTIONS.profile-x86_64 := $(FUNCTIONS.profile-i386)
+
+endif
+endif
